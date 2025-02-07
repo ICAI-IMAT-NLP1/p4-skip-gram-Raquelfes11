@@ -39,13 +39,14 @@ def create_lookup_tables(words: List[str]) -> Tuple[Dict[str, int], Dict[int, st
         and the second maps integers to words (int_to_vocab).
     """
     # TODO
-    word_counts: Counter = None
+    word_counts: Counter = Counter(words)
     # Sorting the words from most to least frequent in text occurrence.
-    sorted_vocab: List[int] = None
-    
+    sorted_words = [word for word, count in word_counts.most_common()]
+    sorted_vocab: List[int] = [words.index(word) for word in sorted_words]
+
     # Create int_to_vocab and vocab_to_int dictionaries.
-    int_to_vocab: Dict[int, str] = None
-    vocab_to_int: Dict[str, int] = None
+    int_to_vocab: Dict[int, str] = {i: words[i] for i in range(len(sorted_vocab))}
+    vocab_to_int: Dict[str, int] = {words[i]: i for i in range(len(sorted_vocab))}
 
     return vocab_to_int, int_to_vocab
 
@@ -95,7 +96,7 @@ def get_target(words: List[str], idx: int, window_size: int = 5) -> List[str]:
 
     return target_words
 
-def get_batches(words: List[int], batch_size: int, window_size: int = 5) -> Generator[Tuple[List[int], List[int]]]:
+def get_batches(words: List[int], batch_size: int, window_size: int = 5):
     """Generate batches of word pairs for training.
 
     This function creates a generator that yields tuples of (inputs, targets),
@@ -116,7 +117,8 @@ def get_batches(words: List[int], batch_size: int, window_size: int = 5) -> Gene
 
     # TODO
     for idx in range(0, len(words), batch_size):
-        inputs, targets: Tuple[List[int], List[int]] = None, None
+        inputs: List[int] = None
+        targets: List[int] = None
         yield inputs, targets
 
 def cosine_similarity(embedding: torch.nn.Embedding, valid_size: int = 16, valid_window: int = 100, device: str = 'cpu'):
