@@ -18,12 +18,12 @@ def load_and_preprocess_data(infile: str) -> List[str]:
     Returns:
         List[str]: A list of preprocessed and tokenized words from the input text.
     """
-    with open(infile) as file:
-        text = file.read()  # Read the entire file
+    with open(infile,"r",encoding="utf-8") as file:
+        text = file.read().lower()  # Read the entire file
 
     # Preprocess and tokenize the text
     # TODO
-    tokens: List[str] = None
+    tokens: List[str] = tokenize(text)
 
     return tokens
 
