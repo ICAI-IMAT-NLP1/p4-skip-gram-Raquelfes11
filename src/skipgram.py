@@ -82,15 +82,16 @@ class SkipGramNeg(nn.Module):
             noise_dist: torch.Tensor = self.noise_dist
 
         # Sample words from our noise distribution
-        # TODO
-        noise_words: torch.Tensor = None
+        # TODO 
+        # torch.multinomial selecciona las palabras según la distribución dada
+        noise_words: torch.Tensor = torch.multinomial(noise_dist, batch_size * n_samples, replacement=True)
 
         device: str = "cuda" if self.out_embed.weight.is_cuda else "cpu"
         noise_words: torch.Tensor = noise_words.to(device)
 
         # Reshape output vectors to size (batch_size, n_samples, n_embed)
         # TODO
-        noise_vectors: torch.Tensor = None
+        noise_vectors: torch.Tensor = self.in_embed(noise_words.view(batch_size,n_samples))
 
         return noise_vectors
 
@@ -127,12 +128,19 @@ class NegativeSamplingLoss(nn.Module):
 
         # Compute log-sigmoid loss for correct classifications
         # TODO
-        out_loss = None
+        z_correct_class: torch.Tensor = torch.sum(input_vectors * output_vectors, dim=1)  # (batch_size,)
+        sigma_correct_class: torch.Tensor = 1/(1+torch.exp(-z_correct_class))
+        out_loss: torch.Tensor =  - torch.sum(torch.log(sigma_correct_class))
 
         # Compute log-sigmoid loss for incorrect classifications
         # TODO
-        noise_loss = None
+        input_vectors_reshaped: torch.Tensor = input_vectors.unsqueeze(1)  # (batch_size, 1, embed_size)
+        z_incorrect_class: torch.Tensor = torch.bmm(noise_vectors,input_vectors_reshaped.transpose(1,2)) # (batch_size, n_samples, 1)
+        z_incorrect_class: torch.Tensor = z_incorrect_class.squeeze(2)  # (batch_size, n_samples)
+        sigma_incorrect_class: torch.Tensor = 1/(1+torch.exp(-z_incorrect_class))
+        noise_loss: torch.Tensor = - torch.sum(torch.log(1-sigma_incorrect_class))
 
         # Return the negative sum of the correct and noisy log-sigmoid losses, averaged over the batch
         # TODO
-        return None
+        total_loss:torch.Tensor = (out_loss+noise_loss)/ input_vectors.size(0)
+        return total_loss
