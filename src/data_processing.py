@@ -97,7 +97,12 @@ def get_target(words: List[str], idx: int, window_size: int = 5) -> List[str]:
         List[str]: A list of words selected randomly within the window around the target word.
     """
     # TODO
-    target_words: List[str] = None
+    R : torch.Tensor = torch.randint(1, window_size+1, (1,)).item()
+
+    start = max(0, idx - R)  
+    end = min(len(words), idx + R + 1)  
+
+    target_words: List[str] = words[start:idx] + words[idx+1:end]
 
     return target_words
 

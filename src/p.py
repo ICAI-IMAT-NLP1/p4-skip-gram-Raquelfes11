@@ -8,16 +8,7 @@ except ImportError:
     from utils import tokenize
 
 
-def load_and_preprocess_data(infile: str) -> List[str]:
-    """
-    Load text data from a file and preprocess it using a tokenize function.
-
-    Args:
-        infile (str): The path to the input file containing text data.
-
-    Returns:
-        List[str]: A list of preprocessed and tokenized words from the input text.
-    """
+'''def load_and_preprocess_data(infile: str) -> List[str]:
     with open(infile,"r",encoding="utf-8") as file:
         text = file.read().lower()  # Read the entire file
 
@@ -28,16 +19,6 @@ def load_and_preprocess_data(infile: str) -> List[str]:
     return tokens
 
 def create_lookup_tables(words: List[str]) -> Tuple[Dict[str, int], Dict[int, str]]:
-    """
-    Create lookup tables for vocabulary.
-
-    Args:
-        words: A list of words from which to create vocabulary.
-
-    Returns:
-        A tuple containing two dictionaries. The first dictionary maps words to integers (vocab_to_int),
-        and the second maps integers to words (int_to_vocab).
-    """
     # TODO
     word_counts: Counter = Counter(words)
     # Sorting the words from most to least frequent in text occurrence.
@@ -59,9 +40,20 @@ def create_lookup_tables(words: List[str]) -> Tuple[Dict[str, int], Dict[int, st
 
 
 
-
-
-
-
 #tokens = load_and_preprocess_data("data/text8")
-create_lookup_tables(["hello", "world", "hello", "test"])
+create_lookup_tables(["hello", "world", "hello", "test"])'''
+
+
+def get_target(words: List[str], idx: int, window_size: int = 5) -> List[str]:
+
+    # TODO
+    R : torch.Tensor = torch.randint(1, window_size+1, (1,)).item()
+
+    start = max(0, idx - R)  
+    end = min(len(words), idx + R + 1)  
+
+    target_words: List[str] = words[start:idx] + words[idx+1:end]
+
+    return target_words
+
+print(get_target(["the", "quick", "brown", "fox", "jumps", "over", "the", "lazy", "dog"],4,2))
