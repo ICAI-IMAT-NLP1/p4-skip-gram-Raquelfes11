@@ -162,9 +162,21 @@ def cosine_similarity(embedding: torch.nn.Embedding, valid_size: int = 16, valid
     Note:
         sim = (a . b) / |a||b| where `a` and `b` are embedding vectors.
     """
-
     # TODO
-    valid_examples: torch.Tensor = None
-    similarities: torch.Tensor = None
+    valid_examples: torch.Tensor = torch.randperm(valid_window)[:valid_size].to(device)
+    similarities: List[float] = list()
 
+    for a in valid_examples:
+        emb_a = embedding(a)
+        for b in range(embedding.num_embeddings):
+            emb_b = embedding(b)
+            
+            dot_product: torch.Tensor = torch.dot(emb_a,emb_b)
+            norm_a: torch.Tensor = torch.norm(emb_a)
+            norm_b: torch.Tensor = torch.norm(emb_b)
+
+            sim = dot_product/(norm_a * norm_b)
+            similarities.append(sim.item())
+
+    similarities: torch.Tensor = torch.tensor(similarities,device=device)
     return valid_examples, similarities
