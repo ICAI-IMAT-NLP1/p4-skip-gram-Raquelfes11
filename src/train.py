@@ -33,7 +33,7 @@ def train_skipgram(model: SkipGramNeg,
     """
     # Define loss and optimizer
     # TODO
-    criterion = None
+    criterion = NegativeSamplingLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     steps = 0
