@@ -130,8 +130,16 @@ def get_batches(words: List[int], batch_size: int, window_size: int = 5):
 
     # TODO
     for idx in range(0, len(words), batch_size):
-        inputs: List[int] = None
-        targets: List[int] = None
+        inputs: List[int] = list()
+        targets: List[int] = list()
+
+        batch_end: int = min(idx + batch_size, len(words))
+
+        for i in range(idx,batch_end):
+            target_words = get_target(words, i, window_size)
+            inputs.extend([words[i]] * len(target_words))  
+            targets.extend(target_words)
+
         yield inputs, targets
 
 def cosine_similarity(embedding: torch.nn.Embedding, valid_size: int = 16, valid_window: int = 100, device: str = 'cpu'):
