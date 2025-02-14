@@ -41,17 +41,16 @@ def create_lookup_tables(words: List[str]) -> Tuple[Dict[str, int], Dict[int, st
     # TODO
     word_counts: Counter = Counter(words)
     # Sorting the words from most to least frequent in text occurrence.
-    sorted_words:List[str] = [word for word, _ in word_counts.most_common()]
-    sorted_vocab: List[int] = [words.index(word) for word in sorted_words]
+    sorted_vocab: List[int] = [words.index(word) for word,_ in word_counts.most_common()]
 
     # Create int_to_vocab and vocab_to_int dictionaries.
     int_to_vocab: Dict[int, str] = dict()
+    vocab_to_int: Dict[str, int] = dict()
     i:int = 0
     for index in sorted_vocab:
         int_to_vocab[i] = words[index]
+        vocab_to_int[words[index]] = i
         i += 1
-
-    vocab_to_int: Dict[str, int] = {word: i for i, word in int_to_vocab.items()}
 
     return vocab_to_int, int_to_vocab
 

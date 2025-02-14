@@ -125,12 +125,13 @@ class NegativeSamplingLoss(nn.Module):
         Returns:
             A tensor containing the average loss for the batch.
         """
-
+        eps = 1e-8
+        
         # Compute log-sigmoid loss for correct classifications
         # TODO
         z_correct_class: torch.Tensor = torch.sum(input_vectors * output_vectors, dim=1)  # (batch_size,)
         sigma_correct_class: torch.Tensor = 1/(1+torch.exp(-z_correct_class))
-        out_loss: torch.Tensor =  - torch.sum(torch.log(sigma_correct_class))
+        out_loss: torch.Tensor =  - torch.sum(torch.log(sigma_correct_class + eps))
 
         # Compute log-sigmoid loss for incorrect classifications
         # TODO
@@ -138,7 +139,7 @@ class NegativeSamplingLoss(nn.Module):
         z_incorrect_class: torch.Tensor = torch.bmm(noise_vectors,input_vectors_reshaped.transpose(1,2)) # (batch_size, n_samples, 1)
         z_incorrect_class: torch.Tensor = z_incorrect_class.squeeze(2)  # (batch_size, n_samples)
         sigma_incorrect_class: torch.Tensor = 1/(1+torch.exp(-z_incorrect_class))
-        noise_loss: torch.Tensor = - torch.sum(torch.log(1-sigma_incorrect_class))
+        noise_loss: torch.Tensor = - torch.sum(torch.log(1-sigma_incorrect_class+eps))
 
         # Return the negative sum of the correct and noisy log-sigmoid losses, averaged over the batch
         # TODO
