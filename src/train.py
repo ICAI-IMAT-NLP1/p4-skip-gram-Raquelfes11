@@ -48,9 +48,6 @@ def train_skipgram(model: SkipGramNeg,
             inputs, targets = torch.LongTensor(input_words), torch.LongTensor(target_words)
             inputs, targets = inputs.to(device), targets.to(device)
 
-            #Zero accumulated gradientes
-            optimizer.zero_grad()
-
             # input, output, and noise vectors
             # TODO
             input_vectors = model.forward_input(inputs)
@@ -65,6 +62,7 @@ def train_skipgram(model: SkipGramNeg,
             # TODO
             loss.backward()
             optimizer.step()
+            optimizer.zero_grad()
 
             if steps % print_every == 0:
                 print(f"Epoch: {epoch+1}/{epochs}, Step: {steps}, Loss: {loss.item()}")
