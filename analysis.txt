@@ -1,0 +1,10 @@
+El modelo Skip-gram con Negative Sampling ha identificado relaciones semánticas y contextuales entre palabras. 
+En la imagen, se observan agrupaciones claras, como términos históricos ("roman", "greek", "english"), tecnológicos 
+("computer", "system", "data") y geográficos ("europe", "germany", "france"). Además, palabras relacionadas con estructuras 
+sociales ("church", "society", "public") están cercanas. También hay asociaciones inesperadas, lo que puede deberse a sesgos 
+en el corpus de entrenamiento. En general, el modelo ha capturado patrones lingüísticos significativos, reflejados en la 
+distribución espacial de los términos.
+
+Claramente hay errores, ya que el modelo no es perfecto y se podría haber entreando más para reducir la pérdida al máximo,
+ya que se puede ver relaciones erroneas o no tan precisas como podría ser un modelo entrenado al 100%. Dicho esto, como
+primera aproximación no está nada mal.
