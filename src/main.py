@@ -21,7 +21,7 @@ def main():
     embedding_dim = 300
     batch_size = 512
     epochs = 5
-    learning_rate = 0.003
+    learning_rate = 0.001
     window_size = 5
     print_every = 1500
     runs_folder = "runs"  # Folder to save models
@@ -47,7 +47,7 @@ def main():
         print("Calculating noise distribution for negative sampling...")
         word_freqs = torch.tensor(sorted(freqs.values(), reverse=True))
         unigram_dist = word_freqs / word_freqs.sum()
-        noise_dist = torch.tensor(unigram_dist ** 0.75 / torch.sum(unigram_dist ** 0.75)).to(device)
+        noise_dist = torch.tensor(unigram_dist ** 0.75 / (torch.sum(unigram_dist ** 0.75)+ 1e-8)).to(device)
 
         print("Step 4: Initializing the SkipGram model...")
         model = SkipGramNeg(len(vocab_to_int), embedding_dim, noise_dist=noise_dist).to(device)
